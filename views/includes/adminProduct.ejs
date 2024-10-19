@@ -1,6 +1,6 @@
 <li class="list_list-item">
-    <h1><%= product.title %></h1>
-    <h3><%= product.price %> $</h3>
-    <button>Edit</button>
-    <a href="/product/<%= product.id %>">Delete</a>
-</li>   
+  <h1><%= product.title %></h1>
+  <h3><%= product.price %> $</h3>
+  <a href="/admin/<%= product._id %>/edit">Edit</a>
+  <a href="/admin/<%= product._id %>/delete">Delete</a>
+</li>

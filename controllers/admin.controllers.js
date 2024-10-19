@@ -1,14 +1,11 @@
-const path = require("path");
-const fs = require("fs");
-const { v4 } = require("uuid");
+const mongoose = require("mongoose");
 
-const databasePath = path.join(__dirname, "..", "data", "products.json");
-
-const Product = require("../models/product");
-const Category = require("../models/Category");
+const Product = mongoose.model("products");
+const Category = mongoose.model("categories");
 
 exports.addProductPage = async (req, res) => {
-  const categories = await Category.fetchAll();
+  const categories = await Category.find();
+
   res.render("addProdukt", {
     pageTitle: "Add new product",
     title: "Add produkt",
@@ -17,22 +14,21 @@ exports.addProductPage = async (req, res) => {
   });
 };
 
-exports.addProductAction = (req, res) => {
+exports.addProductAction = async (req, res) => {
   const { category, title, price } = req.body;
 
-  console.log(category);
-  const product = new Product(title, price, category);
+  const product = await Product.create({ title, price, categoryId: category });
   product.save();
   res.redirect("/");
 };
 
-exports.adminProducts = (req, res) => {
-  Product.fetchAll((products) => {
-    res.render("adminProducts", {
-      pageTitle: "Add new product",
-      path: "/admin/products",
-      products: products,
-    });
+exports.adminProducts = async (req, res) => {
+  const products = await Product.find();
+  console.log(products);
+  res.render("adminProducts", {
+    pageTitle: "Add new product",
+    path: "/admin/products",
+    products: products,
   });
 };
 
@@ -41,4 +37,41 @@ exports.adminOrders = (req, res) => {
     pageTitle: "Admin orders",
     path: "/admin/orders",
   });
+};
+
+exports.editProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  const categories = await Category.find();
+
+  res.render("editProduct", {
+    pageTitle: product.title,
+    path: "/admin/:id/edit",
+    product,
+    categories,
+  });
+};
+
+exports.postEditProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const { title, price, category } = req.body;
+
+  const product = await Product.findById(id);
+
+  product.title = title;
+
+  product.price = price;
+
+  product.categoryId = category;
+  await product.save();
+
+  res.redirect("/admin/products");
+};
+
+exports.deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  await Product.deleteOne({ _id: id });
+  res.redirect("/admin/products");
 };

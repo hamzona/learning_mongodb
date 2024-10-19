@@ -1,34 +1,29 @@
-const path = require("path");
-const fs = require("fs");
+const mongoose = require("mongoose");
 
-const databasePath = path.join(__dirname, "..", "data", "products.json");
-
-const Product = require("../models/product");
+const Product = mongoose.model("products");
 
 exports.redirectPage = (req, res) => res.redirect("/products");
 
-exports.getProducts = (req, res) => {
-	Product.fetchAll((products) => {
-		res.render("index", {
-			pageTitle: "Home page",
-			path: "/products",
-			products,
-		});
-	});
+exports.getProducts = async (req, res) => {
+  const products = await Product.find({});
+  res.render("index", {
+    pageTitle: "Home page",
+    path: "/products",
+    products,
+  });
 };
 
-exports.findProduct = (req, res) => {
-	const { id } = req.params;
-	Product.fetchById(id, (product) => {
-		if (!product) {
-			const error = { message: "Not found" };
-			return res.render("error.ejs", { pageTitle: "Error", path: "", error });
-		}
+exports.findProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  if (!product) {
+    const error = { message: "Not found" };
+    return res.render("error.ejs", { pageTitle: "Error", path: "", error });
+  }
 
-		res.render("product-datails", {
-			path: "/products",
-			pageTitle: product.title,
-			product,
-		});
-	});
+  res.render("product-datails", {
+    path: "/products",
+    pageTitle: product.title,
+    product,
+  });
 };

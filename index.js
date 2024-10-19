@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
-const { v4 } = require("uuid");
-const { connect } = require("./util/database");
+
+const { mongoose } = require("mongoose");
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -10,6 +10,9 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
+require("./models/Category");
+require("./models/Product");
 
 const productRoutes = require("./routes/products.routes");
 const adminRoutes = require("./routes/admin.routes");
@@ -22,6 +25,7 @@ app.use(adminRoutes);
 app.use(cartRoutes);
 
 app.get("*", errorController.get404);
-connect().then(() => {
+
+mongoose.connect("mongodb://127.0.0.1:27017/nodeshop").then(() => {
   app.listen(5000);
 });
