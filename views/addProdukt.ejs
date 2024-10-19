@@ -1,0 +1,27 @@
+<%- include("includes/head.ejs")%>
+   <link rel="stylesheet" href="/css/form.css">
+  </head>
+  <body>
+    <%- include("includes/nav.ejs")%>
+    <form class="form" action="/admin/addProduct" method="post">
+      <h1 class="form_header">Add new product</h1>
+      <div class="form_control">
+        <label for="title">Title</label>
+        <input type="text" name="title" />
+      </div>
+      <div class="form_control">
+      <select name="category" id="">
+         <% for(const category of categories){ %>
+          <option value="<%=category._id %>"><%=category.name %></option>
+      
+      <%} %>
+        </select>
+      </div>
+      <div class="form_control">
+        <label for="price">Price</label>
+        <input type="number" name="price" />
+      </div>
+      <button type="submit">submit</button>
+    </form>
+  </body>   
+</html>

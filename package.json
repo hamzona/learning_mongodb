@@ -1,0 +1,23 @@
+{
+  "name": "second_project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "beson": "^3.1.5",
+    "ejs": "^3.1.10",
+    "express": "^4.20.0",
+    "fs": "^0.0.1-security",
+    "mongodb": "^6.9.0",
+    "nodemon": "^3.1.7",
+    "path": "^0.12.7",
+    "uuid": "^10.0.0"
+  }
+}
